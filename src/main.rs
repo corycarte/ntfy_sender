@@ -28,16 +28,20 @@ struct CliArgs {
 #[derive(ValueEnum, Clone, Debug)]
 enum NtfyPriority {
     Min,
+    Low,
     Default,
+    High,
     Max,
 }
 
 impl fmt::Display for NtfyPriority {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            NtfyPriority::Min => write!(f, "min"),
-            NtfyPriority::Max => write!(f, "max"),
-            _ => write!(f, "default"),
+            NtfyPriority::Min  => write!(f, "min"),
+            NtfyPriority::Low  => write!(f, "low"),
+            NtfyPriority::High => write!(f, "high"),
+            NtfyPriority::Max  => write!(f, "max"),
+            _                  => write!(f, "default"),
         }
     }
 }
