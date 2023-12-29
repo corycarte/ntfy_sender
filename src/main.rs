@@ -3,7 +3,6 @@ use std::io::{self, BufRead};
 
 use atty::Stream;
 use reqwest;
-use serde::Deserialize;
 use clap::{Parser, ValueEnum};
 
 
@@ -43,16 +42,6 @@ impl fmt::Display for NtfyPriority {
     }
 }
 
-#[derive(Deserialize, Debug)]
-struct NtfyResponse {
-    event: String,
-    expires: i32,
-    id: String,
-    message: String,
-    time: i32,
-    topic: String,
-} 
-
 fn read_std_in() -> io::Result<String> {
     if atty::is(Stream::Stdin) {
         return Err(io::Error::new(io::ErrorKind::Other, "This isn't right"));
@@ -69,14 +58,17 @@ fn read_std_in() -> io::Result<String> {
 #[tokio::main]
 async fn main() {
     let args = CliArgs::parse();
-    println!("{:?}", &args);
     let message: String;
     let title: String;
 
     match read_std_in() {
-        Ok(m) => message = m,
+        Ok(m) => {
+            message = m.to_string();
+            dbg!("Using standard in");
+        },
         Err(_e) => {
             message = args.message.unwrap();
+            dbg!("Using cli args");
         }
     }
 
